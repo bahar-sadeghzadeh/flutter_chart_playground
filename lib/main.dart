@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chart_playground/indicator.dart';
+import 'package:flutter_chart_playground/line_drawing.dart';
 
 const Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
@@ -16,91 +18,50 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Center(
-          child: DraggableWidgetStack(),
+          child: AddContainerToStack(),
         ),
       ),
     );
   }
 }
 
-class DraggableWidgetStack extends StatefulWidget {
+class AddContainerToStack extends StatefulWidget {
   @override
-  _DraggableWidgetStackState createState() => _DraggableWidgetStackState();
+  _AddContainerToStackState createState() => _AddContainerToStackState();
 }
 
-class _DraggableWidgetStackState extends State<DraggableWidgetStack> {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-//       fit: StackFit.expand,
-      children: <Widget>[
-        Container(
-          width: 1000.0,
-          height: 1000.0,
-          color: Colors.greenAccent,
-        ),
-        const Indicator(
-          position: Offset(20, 100),
-          color: Colors.blue,
-        ),
-        const Indicator(
-          position: Offset(50.0, 100),
-          color: Colors.blue,
-        ),
-      ],
-    );
-  }
-}
-
-class Indicator extends StatefulWidget {
-  const Indicator({super.key, required this.position, required this.color});
-
-  final Offset position;
-  final Color color;
-
-  @override
-  State<Indicator> createState() => _IndicatorState();
-}
-
-class _IndicatorState extends State<Indicator> {
-  Offset position = const Offset(0, 0);
-  Color color = Colors.blue;
-
-  @override
-  void initState() {
-    super.initState();
-
-    position = widget.position;
-    color = widget.color;
-  }
+class _AddContainerToStackState extends State<AddContainerToStack> {
+  final List<Widget> _children = [
+    Container(
+      color: Colors.greenAccent,
+      height: 1000,
+      width: 1000,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: position.dx,
-      top: position.dy,
-      child: GestureDetector(
-        onPanUpdate: (details) {
-          setState(() {
-            if (color == Colors.red) {
-              position += details.delta;
-            }
-          });
-        },
-        onTap: () {
-          setState(() {
-            if (color == Colors.red) {
-              color = Colors.blue;
-            } else {
-              color = Colors.red;
-            }
-          });
-        },
-        child: Container(
-          width: 10.0,
-          height: 100.0,
-          color: color,
-        ),
+    Offset position;
+
+    return GestureDetector(
+      onTapUp: (TapUpDetails details) {
+        setState(() {
+          position = details.localPosition;
+
+          _children.add(
+            LineDrawing(
+              position: position,
+              color: Colors.lightBlue,
+            ),
+            // Indicator(
+            //   position: position,
+            //   color: Colors.blue,
+            // ),
+          );
+        });
+      },
+      child: Stack(
+        children: _children,
       ),
     );
   }
