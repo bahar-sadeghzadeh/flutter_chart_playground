@@ -27,46 +27,62 @@ class _LineDrawingState extends State<LineDrawing> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanStart: (details) {
-        setState(() {
-          _isDrawing = true;
-          _points = <Offset>[details.localPosition];
-        });
-      },
+    return
+        // Positioned(
+        //   left: 0,
+        //   top: 0,
+        //   child:
+        GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onPanUpdate: (details) {
         setState(() {
-          // if (color == Colors.red) {
-          position = position + details.delta;
-          // }
-          // _points.add(details.localPosition);
-          //     x += details.delta.dx;
-          // y += details.delta.dy;
+          if (color == Colors.red) {
+            position = position + details.delta;
+          }
         });
       },
-      onPanEnd: (details) {
+      onTap: () {
         setState(() {
-          _isDrawing = false;
+          if (color == Colors.red) {
+            color = Colors.blue;
+          } else {
+            color = Colors.red;
+          }
         });
       },
-      // onTap: () {
-      //   setState(() {
-      //     debugPrint('onPaint');
-      //     if (color == Colors.red) {
-      //       color = Colors.lightBlue;
-      //     } else {
-      //       color = Colors.red;
-      //     }
-      //   });
-      // },
+      // child: Container(
+      //     // width: MediaQuery.of(context).size.width,
+      //     // height: MediaQuery.of(context).size.height,
+      //     color: Colors.grey,
+      //     child: CustomPaint(
+      //       foregroundPainter: LinePainter(color: color, position: position),
+      //       // size: Size.infinite,
+      //       size: Size(MediaQuery.of(context).size.width,
+      //           MediaQuery.of(context).size.height),
+      //     )),
+
       child: CustomPaint(
-        painter: LinePainter(
-          position: position,
-          color: color,
-        ),
-        child: Container(),
+        foregroundPainter: LinePainter(color: color, position: position),
+        // size: Size.infinite,
+        // child: Container(
+        //   color: Colors.green,
+        //   width: 100,
+        //   height: 100,
+        // )
       ),
+      // child: IgnorePointer(
+      //     child: Container(
+      //   // color: Colors.green,
+      //   decoration: BoxDecoration(
+      //     color: Colors.transparent,
+      //     borderRadius: BorderRadius.circular(48),
+      //   ),
+      //   width: MediaQuery.of(context).size.width,
+      //   height: MediaQuery.of(context).size.height,
+      // )),
+      // ),
     );
+    // );
   }
 }
 
@@ -90,6 +106,6 @@ class LinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }

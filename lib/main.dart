@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chart_playground/indicator.dart';
-import 'package:flutter_chart_playground/line_drawing.dart';
-
-const Color darkBlue = Color.fromARGB(255, 18, 32, 47);
+import 'package:flutter_chart_playground/transformed_line_drawing.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,25 +9,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: darkBlue,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: AddContainerToStack(),
-        ),
-      ),
+      title: 'Custom Paint Movement Demo',
+      home: MyHomePage(),
     );
   }
 }
 
-class AddContainerToStack extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
   @override
-  _AddContainerToStackState createState() => _AddContainerToStackState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _AddContainerToStackState extends State<AddContainerToStack> {
+class _MyHomePageState extends State<MyHomePage> {
+  // List<Offset> _positions = [
+  //   Offset.zero,
+  //   Offset(100, 100),
+  //   Offset(200, 200),
+  // ];
   final List<Widget> _children = [
     Container(
       color: Colors.greenAccent,
@@ -41,6 +36,22 @@ class _AddContainerToStackState extends State<AddContainerToStack> {
 
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text('Custom Paint Movement Demo'),
+    //   ),
+    //   body: Center(
+    //     child: Stack(
+    //       children: List.generate(
+    //         _positions.length,
+    //         (index) => TransformedLineDrawing(
+    //           position: _positions[index],
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
+
     Offset position;
 
     return GestureDetector(
@@ -49,9 +60,8 @@ class _AddContainerToStackState extends State<AddContainerToStack> {
           position = details.localPosition;
 
           _children.add(
-            LineDrawing(
+            TransformedLineDrawing(
               position: position,
-              color: Colors.lightBlue,
             ),
             // Indicator(
             //   position: position,
@@ -66,3 +76,70 @@ class _AddContainerToStackState extends State<AddContainerToStack> {
     );
   }
 }
+
+// class MyCustomPaint extends StatefulWidget {
+//   final Offset position;
+
+//   MyCustomPaint({required this.position});
+
+//   @override
+//   _MyCustomPaintState createState() => _MyCustomPaintState();
+// }
+
+// class _MyCustomPaintState extends State<MyCustomPaint> {
+//   late Offset _position;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _position = widget.position;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onPanUpdate: (details) {
+//         setState(() {
+//           _position += details.delta;
+//         });
+//       },
+//       child: Transform.translate(
+//         offset: _position,
+//         child: CustomPaint(
+//           painter: LinePainter(_position),
+//           size: const Size(double.infinity, double.infinity),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class LinePainter extends CustomPainter {
+//   final Offset currentPos;
+
+//   LinePainter(this.currentPos);
+
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     Paint paint = Paint()
+//       ..color = Colors.black
+//       ..strokeWidth = 10;
+
+//     Offset startPoint = Offset(0, 0 + 1000);
+//     Offset endPoint = Offset(0, 0 - 1000);
+
+//     canvas.drawLine(startPoint, endPoint, paint);
+//   }
+
+//   @override
+//   bool shouldRepaint(CustomPainter oldDelegate) {
+//     return true;
+//   }
+
+//   @override
+//   bool hitTest(Offset position) {
+//     print('hitTest: $position');
+
+//     return position.dx > 0 && position.dx < 10;
+//   }
+// }
