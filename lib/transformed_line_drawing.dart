@@ -45,49 +45,58 @@ class _TransformedLineDrawingState extends State<TransformedLineDrawing> {
     //   // ),
     // );
     return GestureDetector(
+      onTap: () {
+        // handle the tap event here
+        print('Rectangle tapped!');
+      },
       onPanUpdate: (details) {
+        print('Rectangle panned!');
         setState(() {
           _position += details.delta;
         });
       },
-      child: Transform.translate(
-        offset: _position,
-        child: CustomPaint(
-          painter: LinePainter(_position),
-          size: const Size(double.infinity, double.infinity),
-        ),
+      // behavior: HitTestBehavior.deferToChild,
+      // child: Transform.translate(
+      //   offset: _position,
+      child: CustomPaint(
+        foregroundPainter: LinePainter(position: _position),
+        // child: Container(
+        //   color: Colors.amber,
+        // ),
+        size: const Size(double.infinity, double.infinity),
       ),
+      // ),
     );
   }
 }
 
 class LinePainter extends CustomPainter {
-  // LinePainter({required this.position});
+  LinePainter({required this.position});
 
-  // final Offset position;
+  final Offset position;
   // final Color color;
 
-  final Offset currentPos;
+  // final Offset currentPos;
 
-  LinePainter(this.currentPos);
+  // LinePainter(position:position);
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Paint paint = Paint()
-    //   // ..color = color
-    //   ..strokeWidth = 100;
-
-    // Offset startPoint = Offset(position.dx, position.dy + 1000);
-    // Offset endPoint = Offset(position.dx, position.dy - 1000);
-
-    // canvas.drawLine(startPoint, endPoint, paint);
-
     Paint paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 10;
 
-    Offset startPoint = Offset(0, 0 + 1000);
-    Offset endPoint = Offset(0, 0 - 1000);
+    Offset startPoint = Offset(position.dx, position.dy + 1000);
+    Offset endPoint = Offset(position.dx, position.dy - 1000);
+
+    // canvas.drawLine(startPoint, endPoint, paint);
+
+    // Paint paint = Paint()
+    //   ..color = Colors.black
+    //   ..strokeWidth = 10;
+
+    // Offset startPoint = Offset(0, 0 + 1000);
+    // Offset endPoint = Offset(0, 0 - 1000);
 
     canvas.drawLine(startPoint, endPoint, paint);
   }
@@ -98,7 +107,7 @@ class LinePainter extends CustomPainter {
   }
 
   @override
-  bool hitTest(Offset position) {
+  bool hitTest(Offset position1) {
     // Offset startPoint = Offset(position.dx - 50, position.dy + 1000);
     // Offset endPoint = Offset(position.dx + 50, position.dy - 1000);
 
@@ -109,7 +118,11 @@ class LinePainter extends CustomPainter {
     //     startPoint.dy <= position.dy &&
     //     position.dy <= endPoint.dy);
 
+    // final rect = Rect.fromLTWH(0, 0, 200, 200); // example rectangle size
+    // return rect.contains(position);
+
     // return true;
-    return position.dx > 0 && position.dx < 10;
+    // print(position.dx > 0 && position.dx < 10);
+    return position1.dx > position.dx - 10 && position1.dx < position.dx + 10;
   }
 }
